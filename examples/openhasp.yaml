@@ -1,12 +1,61 @@
-# Drop into configuration.yaml. Slug must match the plate hostname / MQTT node.
-# No event: bindings — Lite has no touch. Hardware keys are GPIO event entities.
+# Slug must match MQTT node. Uncomment and point at your entities later.
+# Clock: now() only updates when something else in this block changes,
+# so add time_date (sensor.time) if you want a live clock.
 
 openhasp:
   tpanel:
     objects:
-      - obj: "p1b10"
+      - obj: "p1b10"   # date
         properties:
-          "text": "{{ states('sensor.time') }}"
-      - obj: "p1b20"
+          "text": "{{ now().strftime('%-d.%-m.') }}"
+      - obj: "p1b11"   # time
         properties:
-          "text": "{{ states('sensor.outdoor_temperature') }}°C"
+          "text": "{{ now().strftime('%H:%M') }}"
+      # - obj: "p1b12"  # subtitle, e.g. weather
+      #   properties:
+      #     "text": "{{ states('weather.home') }}"
+      # - obj: "p1b22"  # outside
+      #   properties:
+      #     "text": "{{ states('sensor.outdoor_temperature') }}°"
+      # - obj: "p1b32"  # inside
+      #   properties:
+      #     "text": "{{ states('sensor.indoor_temperature') }}°"
+      # - obj: "p1b42"  # spot / extra
+      #   properties:
+      #     "text": "{{ states('sensor.something') }}"
+      # - obj: "p1b43"
+      #   properties:
+      #     "val": "{{ states('sensor.something') | float(0) | round(0) }}"
+      # - obj: "p2b21"  # tile A title
+      #   properties:
+      #     "text": "Living"
+      # - obj: "p2b22"
+      #   properties:
+      #     "text": "{{ 'on' if is_state('light.living_room', 'on') else 'off' }}"
+      # - obj: "p2b20"
+      #   properties:
+      #     "bg_color": "{{ '#3D5A3A' if is_state('light.living_room', 'on') else '#1A1F27' }}"
+
+# KEY2 GPIO47 = next, KEY1 GPIO48 = prev (needs MQTT)
+# - alias: tpanel KEY2 next page
+#   trigger:
+#     - platform: mqtt
+#       topic: hasp/tpanel/state/input47
+#   condition:
+#     - condition: template
+#       value_template: "{{ trigger.payload_json.event == 'up' }}"
+#   action:
+#     - service: openhasp.next_page
+#       target:
+#         entity_id: openhasp.tpanel
+# - alias: tpanel KEY1 prev page
+#   trigger:
+#     - platform: mqtt
+#       topic: hasp/tpanel/state/input48
+#   condition:
+#     - condition: template
+#       value_template: "{{ trigger.payload_json.event == 'up' }}"
+#   action:
+#     - service: openhasp.prev_page
+#       target:
+#         entity_id: openhasp.tpanel
