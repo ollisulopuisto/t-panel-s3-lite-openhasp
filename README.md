@@ -2,9 +2,11 @@
 
 Bring-up notes and overlay files for a **T-Panel S3 Lite** (no touch) on [openHASP](https://github.com/HASwitchPlate/openHASP) 0.7.x.
 
-**Verified 2026-09-02** on hardware: TFT/LVGL 480×480, WiFi, HTTP, MQTT, Home Assistant discovery, three hardware buttons. Backlight is **GPIO 33** (LilyGO source), not wiki GPIO 14.
+**Verified 2026-09-02** on hardware: TFT/LVGL 480×480, WiFi, HTTP, MQTT, Home Assistant discovery, three hardware buttons, boot from a 5 V USB-C brick. Backlight is **GPIO 33** (LilyGO source), not wiki GPIO 14.
 
-This is not upstreamed to HASwitchPlate/openHASP.
+`ARDUINO_USB_CDC_ON_BOOT` must be **0** or the plate will not boot on a power brick (it waits for a USB host). See [power](docs/power.md).
+
+Upstream PR: [HASwitchPlate/openHASP#1037](https://github.com/HASwitchPlate/openHASP/pull/1037).
 
 ## Docs
 
@@ -14,7 +16,7 @@ This is not upstreamed to HASwitchPlate/openHASP.
 | [GPIO and buttons](docs/gpio.md) | BOOT / KEY2 / KEY1, why GPIO 48 was missing |
 | [Display and bezel](docs/display.md) | 480×480 square panel, round overlay |
 | [Home Assistant](docs/home-assistant.md) | MQTT, pages.jsonl, no-touch objects |
-| [Power](docs/power.md) | 5 V USB-C only; USB not required at runtime |
+| [Power](docs/power.md) | 5 V USB-C; `CDC_ON_BOOT=0` or a brick never boots |
 | [Source patches](docs/patches.md) | Overlay files and the remaining edits |
 
 ## This is not the full T-Panel
@@ -91,4 +93,4 @@ Then apply [the remaining patches](docs/patches.md): GPIO 48 in the HTTP UI, def
 
 Tested 2026-09-02: USB JTAG (`303A:1001`), openHASP 0.7.0.1.
 
-After a full erase, device came up in AP `HASP-xxxxxx` at `http://192.168.4.1`. After WiFi: HTTP + MQTT; Home Assistant openHASP 0.7.x discovery worked. USB is then only needed for power or later flashing.
+After a full erase, device came up in AP `HASP-xxxxxx` at `http://192.168.4.1`. After WiFi: HTTP + MQTT; Home Assistant openHASP 0.7.x discovery worked. With `CDC_ON_BOOT=0` it also boots from a 5 V USB-C brick. USB to a computer is then only needed for flashing.

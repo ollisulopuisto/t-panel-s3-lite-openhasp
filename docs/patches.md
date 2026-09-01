@@ -26,7 +26,7 @@ Or paste the `[env:lilygo-t-panel-s3-lite]` section into the override.
 
 Insert `openhasp/src/drv/tft/t_panel_lite_init.cpp` into `src/drv/tft/tft_driver_arduinogfx.cpp` **before** the `#elif … LILYGO_T_PANEL` branch. The Lite `#elif` must win over the full T-Panel XL9535 path.
 
-`-D LILYGO_T_PANEL_LITE=1` and `-D TOUCH_DRIVER=-1` are already in the env.
+`-D LILYGO_T_PANEL_LITE=1` and `-D TOUCH_DRIVER=-1` are already in the env. Keep `ARDUINO_USB_CDC_ON_BOOT=0` (a brick will not boot if CDC waits for a host). `ARDUINO_USB_MODE=1` stays so USB JTAG flashing still works.
 
 ## GPIO 48 in the HTTP UI
 

@@ -46,6 +46,10 @@ ser.rts = False
 
 After a failed write: `erase_flash` then `write_flash` of the merged image at `0x0`.
 
+## After CDC on boot is off
+
+Production firmware uses `ARDUINO_USB_CDC_ON_BOOT=0` so a 5 V brick can boot the plate. USB JTAG flashing still works (`ARDUINO_USB_MODE=1`). The USB serial log is quiet; use HTTP or MQTT.
+
 ## After it is on WiFi
 
-OTA and HTTP (`http://<plate-ip>`) work. USB is not required unless you need serial or another flash. See [power](power.md).
+OTA and HTTP (`http://<plate-ip>`) work. USB is not required unless you need another flash. See [power](power.md).
