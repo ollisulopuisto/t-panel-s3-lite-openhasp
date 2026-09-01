@@ -1,0 +1,12 @@
+# Drop into configuration.yaml. Slug must match the plate hostname / MQTT node.
+# No event: bindings — Lite has no touch. Hardware keys are GPIO event entities.
+
+openhasp:
+  tpanel:
+    objects:
+      - obj: "p1b10"
+        properties:
+          "text": "{{ states('sensor.time') }}"
+      - obj: "p1b20"
+        properties:
+          "text": "{{ states('sensor.outdoor_temperature') }}°C"

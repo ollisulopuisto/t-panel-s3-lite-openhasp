@@ -1,8 +1,11 @@
 // Drop-in Arduino_GFX init for LilyGo T-Panel S3 Lite (openHASP).
+// Insert before the LILYGO_T_PANEL (XL9535) branch in tft_driver_arduinogfx.cpp.
 // Arduino_GFX 1.4.7 little-endian maps constructor b* -> data_gpio[0].
 // LilyGO's esp_lcd config puts R0 there, so pass B,G,R into the RGB constructor.
 
 #elif(TFT_WIDTH == 480) && (TFT_HEIGHT == 480) && defined(LILYGO_T_PANEL_LITE)
+    // T-Panel S3 Lite: 9-bit SPI (no XL9535).
+    LOG_VERBOSE(TAG_TFT, F("T-Panel Lite SPI CS=%d SCLK=%d MOSI=%d DE=%d"), TFT_CS, TFT_SCLK, TFT_MOSI, TFT_DE);
     Arduino_DataBus* bus = new Arduino_SWSPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, TFT_MISO);
     Arduino_ESP32RGBPanel* rgbpanel = new Arduino_ESP32RGBPanel(
         TFT_DE, TFT_VSYNC, TFT_HSYNC, TFT_PCLK, TFT_B0, TFT_B1, TFT_B2, TFT_B3, TFT_B4, TFT_G0, TFT_G1, TFT_G2,

@@ -1,0 +1,3 @@
+{"page":0,"id":1,"obj":"obj","x":0,"y":0,"w":480,"h":480,"radius":24,"bg_color":"#111111","bg_opa":255,"border_width":0}
+{"page":1,"id":10,"x":24,"y":20,"w":432,"h":40,"obj":"label","text":"%hostname%","text_align":"center","text_font":32}
+{"page":1,"id":20,"x":24,"y":80,"w":432,"h":48,"obj":"label","text":"--","text_align":"center","text_font":28}
