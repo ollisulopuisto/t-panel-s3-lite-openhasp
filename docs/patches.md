@@ -1,6 +1,8 @@
 # Source patches
 
-Against openHASP 0.7.x (`d1a0770` and nearby). Board JSON and the PlatformIO env are drop-in copies. The rest is surgical.
+Board JSON, the PlatformIO env, GPIO 48 in the HTTP picker, and no-touch `guiSetup()` landed in [openHASP#1037](https://github.com/HASwitchPlate/openHASP/pull/1037). Overlay copies remain for 0.7.x trees that predate that merge.
+
+The rest is surgical. One piece is **not** upstream: NVS re-apply of BOOT/KEY2/KEY1.
 
 ## Copy as-is
 
@@ -62,31 +64,7 @@ with `HASP_GPIO_PIN_COUNT`. Same for `io` loops in the GPIO input/output handler
 #endif
 ```
 
-In `gpioSetup()`, after `aceButtonSetup()`, re-apply if NVS had none:
-
-```c
-#if defined(LILYGO_T_PANEL_LITE)
-    {
-        const uint8_t lite_btns[] = {0, 47, 48}; // BOOT, KEY2, KEY1
-        for(uint8_t b = 0; b < 3; b++) {
-            bool found = false;
-            for(uint8_t i = 0; i < HASP_NUM_GPIO_CONFIG; i++) {
-                if(gpioConfig[i].pin == lite_btns[b] && gpioConfig[i].type == hasp_gpio_type_t::BUTTON_TYPE) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                int8_t id = gpioGetFreeConfigId();
-                if(id >= 0) {
-                    gpioSavePinConfig(id, lite_btns[b], hasp_gpio_type_t::BUTTON_TYPE, (uint8_t)(b + 1),
-                                      hasp_gpio_function_t::INTERNAL_PULLUP, false);
-                }
-            }
-        }
-    }
-#endif
-```
+In `gpioSetup()`, after `aceButtonSetup()`, re-apply if NVS had none. Copy from `openhasp/src/sys/gpio/t_panel_lite_nvs_buttons.cpp` (not in #1037).
 
 ## No-touch guiSetup
 

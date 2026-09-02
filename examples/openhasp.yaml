@@ -1,40 +1,32 @@
-# Slug must match MQTT node. Uncomment and point at your entities later.
-# Clock: now() only updates when something else in this block changes,
-# so add time_date (sensor.time) if you want a live clock.
+# Slug must match MQTT node. Clock: now() only updates when something
+# else in this block changes, so add time_date (sensor.time) for a live clock.
 
 openhasp:
   tpanel:
     objects:
-      - obj: "p1b10"   # date
+      - obj: "p1b10"
         properties:
-          "text": "{{ now().strftime('%-d.%-m.') }}"
-      - obj: "p1b11"   # time
+          "text": "{% set d = ['ma','ti','ke','to','pe','la','su'] %}{{ d[now().weekday()] }} {{ now().day }}.{{ now().month }}."
+      - obj: "p1b11"
         properties:
           "text": "{{ now().strftime('%H:%M') }}"
-      # - obj: "p1b12"  # subtitle, e.g. weather
-      #   properties:
-      #     "text": "{{ states('weather.home') }}"
-      # - obj: "p1b22"  # outside
-      #   properties:
-      #     "text": "{{ states('sensor.outdoor_temperature') }}°"
-      # - obj: "p1b32"  # inside
-      #   properties:
-      #     "text": "{{ states('sensor.indoor_temperature') }}°"
-      # - obj: "p1b42"  # spot / extra
-      #   properties:
-      #     "text": "{{ states('sensor.something') }}"
-      # - obj: "p1b43"
-      #   properties:
-      #     "val": "{{ states('sensor.something') | float(0) | round(0) }}"
-      # - obj: "p2b21"  # tile A title
-      #   properties:
-      #     "text": "Living"
-      # - obj: "p2b22"
-      #   properties:
-      #     "text": "{{ 'on' if is_state('light.living_room', 'on') else 'off' }}"
-      # - obj: "p2b20"
-      #   properties:
-      #     "bg_color": "{{ '#3D5A3A' if is_state('light.living_room', 'on') else '#1A1F27' }}"
+      - obj: "p1b12"
+        properties:
+          "text": "{{ state_translated('weather.lansi_herttoniemi') }}"
+      - obj: "p1b22"
+        properties:
+          "text": "{{ states('sensor.temperature_4') | float(0) | round(1) }}°"
+      - obj: "p1b32"
+        properties:
+          "text": "{{ state_attr('weather.lansi_herttoniemi', 'temperature') | float(0) | round(0) }}°"
+      - obj: "p1b42"
+        properties:
+          "text": >-
+            {% set m = states('sensor.majavatie_h4056_next_departure') %}
+            {{ '--' if m in ['unknown', 'unavailable', 'none', ''] else m ~ ' min' }}
+      - obj: "p1b43"
+        properties:
+          "val": "{{ states('sensor.majavatie_h4056_next_departure') | float(0) | round(0) }}"
 
 # KEY2 GPIO47 = next, KEY1 GPIO48 = prev (needs MQTT)
 # - alias: tpanel KEY2 next page
